@@ -1,6 +1,8 @@
-ARG cuda_version=8.0
-ARG cudnn_version=6
+ARG cuda_version=10.0
+ARG cudnn_version=7
 FROM nvidia/cuda:${cuda_version}-cudnn${cudnn_version}-devel
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install system packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -20,6 +22,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       wget && \
     rm -rf /var/lib/apt/lists/*
 
+
+
 # Install conda
 ENV CONDA_DIR /opt/conda
 ENV PATH $CONDA_DIR/bin:$PATH
@@ -31,23 +35,23 @@ RUN wget --quiet --no-check-certificate https://repo.continuum.io/miniconda/Mini
     echo export PATH=$CONDA_DIR/bin:'$PATH' > /etc/profile.d/conda.sh
 
 # Install Python packages and keras
-ENV NB_USER keras
+ENV NB_USER kocr
 ENV NB_UID 1000
 
-RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
+RUN useradd -m $NB_USER && echo "kocr:kocr" | chpasswd && adduser $NB_USER sudo && \
     chown $NB_USER $CONDA_DIR -R && \
     mkdir -p /src && \
     chown $NB_USER /src
 
 USER $NB_USER
 
-ARG python_version=2.7
+ARG python_version=3.6
 
 RUN conda config --append channels conda-forge
 RUN conda install -y python=${python_version} && \
     pip install --upgrade pip && \
     pip install \
-      tensorflow-gpu==2.0 \
+      tensorflow-gpu \
       sklearn_pandas \
       opencv-python \
       setuptools==41 \
