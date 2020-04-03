@@ -1,4 +1,4 @@
-ARG cuda_version=10.0
+ARG cuda_version=9.0
 ARG cudnn_version=7
 FROM nvidia/cuda:${cuda_version}-cudnn${cudnn_version}-devel
 
@@ -6,6 +6,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install system packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
+      python-dev \
+      libblas-dev \
       bzip2 \
       g++ \
       git \
@@ -51,10 +53,10 @@ RUN conda config --append channels conda-forge
 RUN conda install -y python=${python_version} && \
     pip install --upgrade pip && \
     pip install \
-      tensorflow-gpu \
+      tensorflow-gpu==1.2.0 \
       sklearn_pandas \
       opencv-python \
-      setuptools==41 \
+      setuptools \
       --ignore-installed six \
       cntk-gpu && \
     conda install \
@@ -65,7 +67,6 @@ RUN conda install -y python=${python_version} && \
       mkl \
       nose \
       notebook \
-      Pillow \
       pandas \
       pydot \
       pygpu \
@@ -75,14 +76,21 @@ RUN conda install -y python=${python_version} && \
       h5py \
       mkdocs \
       && \
-      git clone git://github.com/keras-team/keras.git /src && pip install -e /src[tests] && \
-      pip install git+git://github.com/keras-team/keras.git && \
-    conda clean -yt && \
-    cd ~ && mkdir code && cd code && \
-    git clone https://github.com/faxocr/kocr.git && cd kocr && git fetch origin pull/3/head:replace_preprocessing && git checkout replace_preprocessing 
+    conda clean -yt 
+
+RUN conda install \
+     keras==2.1.4 
 
 
-    
+
+ADD kocr_cnn.cpp /home/src/kocr_cnn.cpp
+ADD train_cnn.py /home/src/train_cnn.py
+RUN cd ~ && mkdir code && cd code && \
+    git clone https://github.com/faxocr/kocr.git && \
+    cd kocr && git fetch origin pull/3/head:replace_preprocessing && git checkout replace_preprocessing && \
+    cd ~/code/kocr/learning && mv train_cnn.py train_cnn.py.bk && cp /home/src/train_cnn.py . && \
+    cd ~/code/kocr/src && mv kocr_cnn.cpp kocr_cnn.cpp.bk && cp /home/src/kocr_cnn.cpp . 
+
 
 ADD theanorc /home/keras/.theanorc
 
