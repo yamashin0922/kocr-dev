@@ -6,9 +6,9 @@ GPU?=0
 DOCKER_FILE=Dockerfile
 DOCKER=GPU=$(GPU) docker
 BACKEND=tensorflow
-PYTHON_VERSION?=2.7
-CUDA_VERSION?=8.0
-CUDNN_VERSION?=6
+PYTHON_VERSION?=3.6
+CUDA_VERSION?=9.0
+CUDNN_VERSION?=7
 TEST=tests/
 SRC?=$(shell dirname `pwd`)
 
@@ -18,14 +18,7 @@ build:
 
 bash: build
 	$(DOCKER) run \
-             --device /dev/nvidia0:/dev/nvidia0 \
-             --device /dev/nvidiactl:/dev/nvidiactl \
-             --device /dev/nvidia-uvm:/dev/nvidia-uvm \
-             -v /usr/local/cuda/lib64:/usr/local/cuda/lib64 \
-             -v /usr/lib/x86_64-linux-gnu/libcuda.so:/usr/lib/x86_64-linux-gnu/libcuda.so \
-             -v /usr/lib/x86_64-linux-gnu/libcuda.so.1:/usr/lib/x86_64-linux-gnu/libcuda.so.1 \
-             -v /usr/lib/x86_64-linux-gnu/libcuda.so.440.64.00:/usr/lib/x86_64-linux-gnu/libcuda.so.440.64.00 \
-        -it -v $(SRC):/src/workspace -v $(DATA):/data --env KERAS_BACKEND=$(BACKEND) keras bash
+        -it --gpus all -v $(SRC):/src/workspace -v $(DATA):/data --env KERAS_BACKEND=$(BACKEND) keras bash
 
 ipython: build
 	$(DOCKER) run $(DEVICES) $(CUDA_LIB) $(CUDA_SO) -it -v $(SRC):/src/workspace -v $(DATA):/data --env KERAS_BACKEND=$(BACKEND) keras ipython
