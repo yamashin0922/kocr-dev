@@ -53,7 +53,6 @@ RUN conda config --append channels conda-forge
 RUN conda install -y python=${python_version} && \
     pip install --upgrade pip && \
     pip install \
-      tensorflow-gpu==1.2.0 \
       sklearn_pandas \
       opencv-python \
       setuptools \
@@ -79,7 +78,8 @@ RUN conda install -y python=${python_version} && \
     conda clean -yt 
 
 RUN conda install \
-     keras==2.1.4 
+     keras==2.1.4 \
+     tensorflow-gpu
 
 
 
@@ -89,8 +89,18 @@ RUN cd ~ && mkdir code && cd code && \
     git clone https://github.com/faxocr/kocr.git && \
     cd kocr && git fetch origin pull/3/head:replace_preprocessing && git checkout replace_preprocessing && \
     cd ~/code/kocr/learning && mv train_cnn.py train_cnn.py.bk && cp /home/src/train_cnn.py . && \
-    cd ~/code/kocr/src && mv kocr_cnn.cpp kocr_cnn.cpp.bk && cp /home/src/kocr_cnn.cpp . && \
-    cd ~/code/kocr/learning && ./install_packages.sh && python train_cnn.py --train_dirs ../images/numbers/ --test_dirs ../images/samples/
+    cd ~/code/kocr/learning && ./install_packages.sh && python train_cnn.py --train_dirs ../images/numbers/ --test_dirs ../images/samples/ && \
+    cd ~/code/kocr/src && mv kocr_cnn.cpp kocr_cnn.cpp.bk && cp /home/src/kocr_cnn.cpp . && make && \
+    ./kocr ../learning/cnn-result.bin ../images/samples/sample-img-0.png && \
+    ./kocr ../learning/cnn-result.bin ../images/samples/sample-img-1.png && \
+    ./kocr ../learning/cnn-result.bin ../images/samples/sample-img-2.png && \
+    ./kocr ../learning/cnn-result.bin ../images/samples/sample-img-3.png && \
+    ./kocr ../learning/cnn-result.bin ../images/samples/sample-img-4.png && \
+    ./kocr ../learning/cnn-result.bin ../images/samples/sample-img-5.png && \
+    ./kocr ../learning/cnn-result.bin ../images/samples/sample-img-6.png && \
+    ./kocr ../learning/cnn-result.bin ../images/samples/sample-img-7.png && \
+    ./kocr ../learning/cnn-result.bin ../images/samples/sample-img-8.png && \
+    ./kocr ../learning/cnn-result.bin ../images/samples/sample-img-9.bmp
 
 
 ADD theanorc /home/keras/.theanorc
