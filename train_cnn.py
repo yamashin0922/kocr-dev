@@ -75,7 +75,7 @@ def load_data(input_dirs, nb_dim, pad=3):
 def build_model(nb_dim, nb_output):
     model = Sequential()
 
-    if 0:
+    if 1:
         model.add(Conv2D(32, (5, 5), activation='relu', padding='valid', input_shape=(1, nb_dim, nb_dim)))
         model.add(Conv2D(32, (5, 5), activation='relu', padding='valid'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
