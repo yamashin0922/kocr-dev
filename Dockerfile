@@ -89,7 +89,8 @@ RUN cd ~ && mkdir code && cd code && \
     git clone https://github.com/faxocr/kocr.git && \
     cd kocr && git fetch origin pull/3/head:replace_preprocessing && git checkout replace_preprocessing && \
     cd ~/code/kocr/learning && mv train_cnn.py train_cnn.py.bk && cp /home/src/train_cnn.py . && \
-    cd ~/code/kocr/src && mv kocr_cnn.cpp kocr_cnn.cpp.bk && cp /home/src/kocr_cnn.cpp . 
+    cd ~/code/kocr/src && mv kocr_cnn.cpp kocr_cnn.cpp.bk && cp /home/src/kocr_cnn.cpp . && \
+    cd ~/code/kocr/learning && ./install_packages.sh && python train_cnn.py --train_dirs ../images/numbers/ --test_dirs ../images/samples/
 
 
 ADD theanorc /home/keras/.theanorc
