@@ -11,6 +11,7 @@ quick links here:
 * [ubuntu](https://docs.docker.com/installation/ubuntulinux/)
 
 Here is the version I installed.
+```
 $ docker version
 Client: Docker Engine - Community
  Version:           19.03.8
@@ -39,7 +40,7 @@ Server: Docker Engine - Community
  docker-init:
   Version:          0.18.0
   GitCommit:        fec3683
-
+```
 
 ## Running the container
 
