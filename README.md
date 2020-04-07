@@ -8,39 +8,51 @@ Keras via [Docker](http://www.docker.com/).
 General installation instructions are
 [on the Docker site](https://docs.docker.com/installation/), but we give some
 quick links here:
-
-* [OSX](https://docs.docker.com/installation/mac/): [docker toolbox](https://www.docker.com/toolbox)
 * [ubuntu](https://docs.docker.com/installation/ubuntulinux/)
 
+Here is the version I installed.
+$ docker version
+Client: Docker Engine - Community
+ Version:           19.03.8
+ API version:       1.40
+ Go version:        go1.12.17
+ Git commit:        afacb8b7f0
+ Built:             Wed Mar 11 01:25:46 2020
+ OS/Arch:           linux/amd64
+ Experimental:      false
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          19.03.8
+  API version:      1.40 (minimum version 1.12)
+  Go version:       go1.12.17
+  Git commit:       afacb8b7f0
+  Built:            Wed Mar 11 01:24:19 2020
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          1.2.13
+  GitCommit:        7ad184331fa3e55e52b890ea95e65ba581ae3429
+ runc:
+  Version:          1.0.0-rc10
+  GitCommit:        dc9208a3303feef5b3839f4323d9beb36df0a9dd
+ docker-init:
+  Version:          0.18.0
+  GitCommit:        fec3683
+
+
 ## Running the container
-
-We are using `Makefile` to simplify docker commands within make commands.
-
-Build the container and start a Jupyter Notebook
-
-    $ make notebook
-
-Build the container and start an iPython shell
-
-    $ make ipython
-
-Build the container and start a bash
-
-    $ make bash
 
 For GPU support install NVIDIA drivers (ideally latest) and
 [nvidia-docker](https://github.com/NVIDIA/nvidia-docker). Run using
 
-    $ make notebook GPU=0 # or [ipython, bash]
-
 Switch between Theano and TensorFlow
 
-    $ make notebook BACKEND=theano
-    $ make notebook BACKEND=tensorflow
-
-Mount a volume for external data sets
-
-    $ make DATA=~/mydata
+    $ make bask BACKEND=theano
+   
+Enabling GPU still does not work. 
+    $ make bask GPU=0 bBACKEND=theano
+    $ make bask GPU=0 BACKEND=tensorflow
 
 Prints all make tasks
 
@@ -49,11 +61,3 @@ Prints all make tasks
 You can change Theano parameters by editing `/docker/theanorc`.
 
 
-Note: If you would have a problem running nvidia-docker you may try the old way
-we have used. But it is not recommended. If you find a bug in the nvidia-docker report
-it there please and try using the nvidia-docker as described above.
-
-    $ export CUDA_SO=$(\ls /usr/lib/x86_64-linux-gnu/libcuda.* | xargs -I{} echo '-v {}:{}')
-    $ export DEVICES=$(\ls /dev/nvidia* | xargs -I{} echo '--device {}:{}')
-    $ docker run -it -p 8888:8888 $CUDA_SO $DEVICES gcr.io/tensorflow/tensorflow:latest-gpu
-# kocr-dev
