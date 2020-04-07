@@ -48,11 +48,11 @@ For GPU support install NVIDIA drivers (ideally latest) and
 
 Switch between Theano and TensorFlow
 
-    $ make bask BACKEND=theano
+    $ make bash BACKEND=theano
    
 Enabling GPU still does not work. 
-    $ make bask GPU=0 bBACKEND=theano
-    $ make bask GPU=0 BACKEND=tensorflow
+    $ make bash GPU=0 bBACKEND=theano
+    $ make bash GPU=0 BACKEND=tensorflow
 
 Prints all make tasks
 
