@@ -58,6 +58,10 @@ Prints all make tasks
 
     $ make help
 
-You can change Theano parameters by editing `/docker/theanorc`.
+Training 0-9 images in container.
+    $ cd ~/code/kocr/learning
+    $ python train_cnn.py --train_dirs ../images/numbers/ --test_dirs ../images/samples/
+
+
 
 
